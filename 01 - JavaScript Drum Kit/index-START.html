@@ -59,6 +59,36 @@
 
 <script>
 
+  // select all the elements with the 'key' class
+  const keysArray = document.querySelectorAll('.key');
+  // loop through the keysArray to listen for transition end events, and remove them as they finish
+  keysArray.forEach(keyboardKey => keyboardKey.addEventListener('transitionend', removeTransition));
+  // listen for keypress
+  window.addEventListener('keydown', playSound);
+
+  function playSound(e) {
+    // select the audio element with the data-key
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    // select the keyboard key elemtn with the data-key
+    const keyboardKey = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+    // ignore non-audio elements with data-keys
+    if (!audio) return;
+    // reset audio to start every time this runs so if you hit the same key again, it restarts the audio for rapid sucession playing
+    audio.currentTime = 0;
+    // play audio
+    audio.play();
+    // add 'playing' class (yellow highlight)
+    keyboardKey.classList.add('playing');
+  };
+
+  // remove 'playing' class after transition ends
+  function removeTransition(e) {
+    // ignore non-transform transitions
+    if (e.propertyName !== 'transform') return;
+    // remove the 'playing' class
+    this.classList.remove('playing');
+  }
+
 </script>
 
 
